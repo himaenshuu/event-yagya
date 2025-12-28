@@ -233,7 +233,9 @@ export const DonationPage: React.FC<{
       console.error("Image save error:", error);
       // Provide more helpful error message
       const errorMsg = error.message || "Unknown error occurred";
-      alert(`Failed to save image: ${errorMsg}\n\nPlease try:\n1. Taking a screenshot instead\n2. Ensuring your browser allows downloads\n3. Checking your internet connection`);
+      alert(
+        `Failed to save image: ${errorMsg}\n\nPlease try:\n1. Taking a screenshot instead\n2. Ensuring your browser allows downloads\n3. Checking your internet connection`
+      );
     } finally {
       setIsSaving(false);
     }
