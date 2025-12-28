@@ -33,10 +33,10 @@ async function generateVerificationHash(
   const secret =
     import.meta.env.VITE_VERIFICATION_SECRET || "yagya-secret-2024";
   const payload = `${passId}:${amount}:${timestamp}:${secret}`;
-  
+
   // Import bcryptjs for client-side compatibility
   const bcrypt = await import("bcryptjs");
-  
+
   // Use bcrypt with 10 salt rounds for secure hashing
   const hash = await bcrypt.hash(payload, 10);
   return hash;
@@ -318,11 +318,11 @@ export const appwriteService = {
       const bcrypt = await import("bcryptjs");
       const secret =
         import.meta.env.VITE_VERIFICATION_SECRET || "yagya-secret-2024";
-      
+
       // Normalize timestamp - Appwrite adds +00:00 suffix, normalize to Z format
-      const normalizedTimestamp = doc.transactionDate.replace('+00:00', 'Z');
+      const normalizedTimestamp = doc.transactionDate.replace("+00:00", "Z");
       const payload = `${doc.passId}:${doc.amount}:${normalizedTimestamp}:${secret}`;
-      
+
       const isValid = await bcrypt.compare(payload, doc.verificationHash);
       console.log("🔐 [VERIFY] Hash comparison:", {
         stored: doc.verificationHash?.substring(0, 16) + "...",
