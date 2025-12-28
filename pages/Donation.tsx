@@ -183,7 +183,7 @@ export const DonationPage: React.FC<{
       );
 
       // Small delay to ensure rendering is complete
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // High-quality rendering settings
       const canvas = await html2canvas(element, {
@@ -207,7 +207,7 @@ export const DonationPage: React.FC<{
 
       // Convert to high-quality PNG (lossless)
       const image = canvas.toDataURL("image/png", 1.0);
-      
+
       // Verify image has content (not just header)
       if (image.length < 1000) {
         throw new Error("Generated image appears to be empty");
