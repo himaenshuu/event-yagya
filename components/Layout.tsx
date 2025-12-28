@@ -131,8 +131,7 @@ export const Layout: React.FC<{
         <div className="max-w-5xl mx-auto">
           <div className="glass rounded-2xl p-6 border border-white/20 shadow-sm">
             <p className="text-sm text-red-900/70 font-medium">
-              © {new Date().getFullYear()} Community Festival Organizing
-              Team
+              © {new Date().getFullYear()} Community Festival Organizing Team
             </p>
             <p className="text-xs text-red-800/50 mt-2">
               All rights reserved. May divine blessings be upon all.

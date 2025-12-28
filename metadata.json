@@ -1,7 +1,5 @@
 {
   "name": "Annual Community Festival",
   "description": "A comprehensive community platform for the Annual Community Festival at Springfield Community Center, featuring live updates, event schedules, secure donations, and admin management.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "requestFramePermissions": ["camera"]
 }

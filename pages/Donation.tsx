@@ -258,7 +258,9 @@ export const DonationPage: React.FC<{
             <div className="absolute top-2 right-2 opacity-20">
               <ShieldCheck size={60} />
             </div>
-            <h3 className="text-xl font-bold tracking-tight">COMMUNITY FESTIVAL</h3>
+            <h3 className="text-xl font-bold tracking-tight">
+              COMMUNITY FESTIVAL
+            </h3>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">
               Springfield • Feb 2026
             </p>
@@ -383,7 +385,8 @@ export const DonationPage: React.FC<{
           Devotional Contribution
         </h2>
         <p className="text-gray-600">
-          Your contribution supports community programs and charitable activities at Springfield.
+          Your contribution supports community programs and charitable
+          activities at Springfield.
         </p>
       </div>
 
