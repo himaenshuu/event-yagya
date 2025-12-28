@@ -116,17 +116,24 @@ export const DonationPage: React.FC<{
           })
         );
 
+        // High-quality rendering for cloud storage
         const canvas = await html2canvas(element, {
-          scale: 2,
+          scale: window.devicePixelRatio * 2,
           useCORS: true,
           logging: false,
           allowTaint: true,
           backgroundColor: "#ffffff",
           foreignObjectRendering: true,
+          imageTimeout: 15000,
+          removeContainer: true,
+          scrollY: -window.scrollY,
+          scrollX: -window.scrollX,
+          windowWidth: element.scrollWidth,
+          windowHeight: element.scrollHeight,
         });
 
         const blob = await new Promise<Blob | null>((resolve) => {
-          canvas.toBlob((b) => resolve(b), "image/png", 0.9);
+          canvas.toBlob((b) => resolve(b), "image/png", 1.0);
         });
 
         if (blob) {
@@ -157,20 +164,30 @@ export const DonationPage: React.FC<{
 
     setIsSaving(true);
     try {
+      // High-quality rendering settings
       const canvas = await html2canvas(element, {
-        scale: 3,
+        scale: window.devicePixelRatio * 2, // 2x device resolution for crisp quality
         backgroundColor: "#ffffff",
         useCORS: true,
         logging: false,
         allowTaint: true,
         foreignObjectRendering: true,
+        imageTimeout: 15000, // Allow time for images to load
+        removeContainer: true, // Clean up after render
+        scrollY: -window.scrollY, // Fix positioning issues
+        scrollX: -window.scrollX,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
       });
 
-      const image = canvas.toDataURL("image/png");
+      // Convert to high-quality PNG (lossless)
+      const image = canvas.toDataURL("image/png", 1.0);
       const link = document.createElement("a");
-      link.download = `Devotee_Pass_${receipt?.transactionId}.png`;
+      link.download = `Contribution_Pass_${receipt?.transactionId}.png`;
       link.href = image;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
     } catch (error) {
       if (import.meta.env.DEV) console.error("Save failed:", error);
       alert("Failed to save image. Please take a screenshot instead.");
