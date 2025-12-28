@@ -238,14 +238,6 @@ export const DonationPage: React.FC<{
       setIsSaving(false);
     }
   };
-      document.body.removeChild(link);
-    } catch (error) {
-      if (import.meta.env.DEV) console.error("Save failed:", error);
-      alert("Failed to save image. Please take a screenshot instead.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleShare = async () => {
     if (navigator.share && receipt) {
