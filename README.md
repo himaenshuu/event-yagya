@@ -217,5 +217,3 @@ Perfect for portfolios showcasing **security engineering** and **full-stack expe
 ---
 
 **Tech Stack:** React 19 • TypeScript • Vite • Appwrite • Vercel • Argon2 • bcrypt • Gemini AI • Tailwind CSS
-
-**Documentation:** See [HASHING_MIGRATION.md](HASHING_MIGRATION.md) for detailed security implementation notes.
