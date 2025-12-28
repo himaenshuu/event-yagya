@@ -87,6 +87,18 @@
           background-position: 1000px 0;
         }
       }
+      @keyframes glow {
+        0%, 100% {
+          box-shadow: 0 0 20px rgba(234, 88, 12, 0.3),
+                      0 0 40px rgba(234, 88, 12, 0.2),
+                      0 0 60px rgba(234, 88, 12, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(234, 88, 12, 0.5),
+                      0 0 60px rgba(234, 88, 12, 0.3),
+                      0 0 90px rgba(234, 88, 12, 0.2);
+        }
+      }
 
       .animate-slide-up {
         animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -102,6 +114,9 @@
       }
       .animate-bounce-short {
         animation: bounceSmall 2s infinite ease-in-out;
+      }
+      .animate-glow {
+        animation: glow 2s infinite ease-in-out;
       }
 
       .shimmer-bg {

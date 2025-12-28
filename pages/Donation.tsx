@@ -164,24 +164,55 @@ export const DonationPage: React.FC<{
 
     setIsSaving(true);
     try {
+      // Wait for all images (especially QR code) to fully load
+      const images = element.querySelectorAll("img");
+      await Promise.all(
+        Array.from(images).map((img) => {
+          if (img.complete) return Promise.resolve();
+          return new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+            // Force reload if not loaded
+            if (!img.complete) {
+              const src = img.src;
+              img.src = "";
+              img.src = src;
+            }
+          });
+        })
+      );
+
+      // Small delay to ensure rendering is complete
+      await new Promise(resolve => setTimeout(resolve, 300));
+
       // High-quality rendering settings
       const canvas = await html2canvas(element, {
-        scale: window.devicePixelRatio * 2, // 2x device resolution for crisp quality
+        scale: 3, // Fixed high resolution
         backgroundColor: "#ffffff",
         useCORS: true,
-        logging: false,
-        allowTaint: true,
-        foreignObjectRendering: true,
-        imageTimeout: 15000, // Allow time for images to load
-        removeContainer: true, // Clean up after render
-        scrollY: -window.scrollY, // Fix positioning issues
-        scrollX: -window.scrollX,
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight,
+        logging: true, // Enable logging to debug
+        allowTaint: false, // Strict CORS
+        foreignObjectRendering: false, // More reliable rendering
+        imageTimeout: 0, // Already waited for images
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+        x: 0,
+        y: 0,
       });
+
+      // Verify canvas has content
+      if (canvas.width === 0 || canvas.height === 0) {
+        throw new Error("Canvas has no dimensions");
+      }
 
       // Convert to high-quality PNG (lossless)
       const image = canvas.toDataURL("image/png", 1.0);
+      
+      // Verify image has content (not just header)
+      if (image.length < 1000) {
+        throw new Error("Generated image appears to be empty");
+      }
+
       const link = document.createElement("a");
       link.download = `Contribution_Pass_${receipt?.transactionId}.png`;
       link.href = image;
@@ -261,7 +292,7 @@ export const DonationPage: React.FC<{
 
         <div
           id="devotee-pass"
-          className="relative mx-auto w-full max-w-[320px] bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border-4"
+          className="relative mx-auto w-full max-w-[320px] bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border-4 animate-glow"
           style={{ borderColor: "#edb20033" }}
         >
           <div
