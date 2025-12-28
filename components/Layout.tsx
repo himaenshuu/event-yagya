@@ -38,9 +38,9 @@ export const Layout: React.FC<{
       <header className="md:hidden sticky top-0 z-50 glass text-red-900 p-4 shadow-sm border-b border-white flex justify-between items-center animate-fade-in">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-red-800 rounded-lg flex items-center justify-center text-white font-bold text-xs">
-            M
+            A
           </div>
-          <h1 className="text-xl font-bold tracking-tight">Satchandi</h1>
+          <h1 className="text-xl font-bold tracking-tight">Community</h1>
         </div>
         <div className="flex items-center gap-1">
           <NotificationToggle />
@@ -61,14 +61,14 @@ export const Layout: React.FC<{
         <div className="p-8">
           <div className="flex items-center gap-3 mb-8 hover:scale-105 transition-transform cursor-default origin-left">
             <div className="w-10 h-10 bg-red-700 rounded-xl flex items-center justify-center shadow-lg font-bold text-lg">
-              MS
+              CF
             </div>
             <div>
               <h1 className="text-xl font-bold leading-tight">
-                Maha Satchandi
+                Community Festival
               </h1>
               <p className="text-[10px] text-red-400 font-black uppercase tracking-widest">
-                Tetarpur, Siswar
+                Springfield Center
               </p>
             </div>
           </div>
@@ -131,7 +131,7 @@ export const Layout: React.FC<{
         <div className="max-w-5xl mx-auto">
           <div className="glass rounded-2xl p-6 border border-white/20 shadow-sm">
             <p className="text-sm text-red-900/70 font-medium">
-              © {new Date().getFullYear()} Maha Satchandi Mahayagya Organizing
+              © {new Date().getFullYear()} Community Festival Organizing
               Team
             </p>
             <p className="text-xs text-red-800/50 mt-2">

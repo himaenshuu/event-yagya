@@ -18,8 +18,8 @@ export const NotificationToggle: React.FC = () => {
     
     if (result === 'granted') {
       new Notification('Notifications Enabled', {
-        body: 'You will now receive updates about the Mahayagya rituals.',
-        icon: 'https://picsum.photos/seed/yagya/100/100'
+        body: 'You will now receive updates about the event activities.',
+        icon: 'https://picsum.photos/seed/community/100/100'
       });
     }
   };

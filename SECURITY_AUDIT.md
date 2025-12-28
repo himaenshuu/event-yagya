@@ -96,7 +96,7 @@ Before deploying to production:
 - [x] All console logs guarded by DEV check
 - [x] Error messages sanitized
 - [x] .env.local in .gitignore
-- [ ] Add mahayagya2026.live to Appwrite Platforms
+- [ ] Add your custom domain to Appwrite Platforms
 - [ ] Set VITE_VERIFICATION_SECRET in production env
 - [ ] Consider moving Gemini AI to backend
 - [ ] Test with production build (`npm run build`)

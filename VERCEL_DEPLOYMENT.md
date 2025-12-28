@@ -66,7 +66,7 @@ Follow the prompts:
 - Set up and deploy? **Y**
 - Which scope? (Select your account)
 - Link to existing project? **N** (or **Y** if you have one)
-- What's your project's name? `event-yagya`
+- What's your project's name? `community-festival-app`
 - In which directory is your code located? `./`
 - Want to override settings? **N**
 
@@ -146,7 +146,7 @@ X-RateLimit-Reset: 2025-12-26T10:30:00.000Z
 **Response (Success - 200):**
 ```json
 {
-  "response": "The Maha Satchandi Mahayagya is a spiritual event..."
+  "response": "The Annual Community Festival is a community gathering event..."
 }
 ```
 

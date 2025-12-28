@@ -63,11 +63,11 @@ export const DonationPage: React.FC<{
 
       const newDonation: Donation = {
         id: crypto.randomUUID(),
-        donorName: sanitizedName || "Anonymous Devotee",
+        donorName: sanitizedName || "Anonymous Donor",
         amount: amount,
         purpose: sanitizedPurpose,
         timestamp: new Date().toISOString(),
-        transactionId: `YGYA-${receiptId}`, // Human-readable display ID
+        transactionId: `ACF-${receiptId}`, // Human-readable display ID
         passId: passId, // Secure UUID for verification
         receiptId: receiptId,
         paymentMethod: "mobile_payment",
@@ -183,8 +183,8 @@ export const DonationPage: React.FC<{
     if (navigator.share && receipt) {
       try {
         await navigator.share({
-          title: "Maha Satchandi Devotee Pass",
-          text: `I just contributed to the Maha Satchandi Mahayagya. My Pass ID is ${receipt.passId}`,
+          title: "Community Festival Contribution Pass",
+          text: `I just contributed to the Annual Community Festival. My Pass ID is ${receipt.passId}`,
           url: window.location.href.split("#")[0],
         });
       } catch (err) {
@@ -258,16 +258,16 @@ export const DonationPage: React.FC<{
             <div className="absolute top-2 right-2 opacity-20">
               <ShieldCheck size={60} />
             </div>
-            <h3 className="text-xl font-bold tracking-tight">MAHA SATCHANDI</h3>
+            <h3 className="text-xl font-bold tracking-tight">COMMUNITY FESTIVAL</h3>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">
-              Tetarpur, Siswar • 2024
+              Springfield • Feb 2026
             </p>
           </div>
 
           <div className="p-8 space-y-6 text-center">
             <div>
               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-                Devotee Name
+                Contributor Name
               </p>
               <h4 className="text-2xl font-bold text-gray-900">
                 {receipt.donorName}
@@ -323,7 +323,7 @@ export const DonationPage: React.FC<{
 
           <div className="bg-gray-50 p-4 text-center border-t border-gray-100">
             <p className="text-[9px] font-serif italic text-gray-400">
-              "May Goddess Durga bless your noble contribution"
+              "Thank you for your generous contribution"
             </p>
           </div>
         </div>
@@ -340,7 +340,7 @@ export const DonationPage: React.FC<{
               </>
             ) : (
               <>
-                <Download size={20} /> Save Devotee Pass (Image)
+                <Download size={20} /> Save Contribution Pass (Image)
               </>
             )}
           </button>
@@ -369,7 +369,7 @@ export const DonationPage: React.FC<{
       <div className="flex flex-col items-center justify-center py-32 space-y-6 animate-fade-in">
         <div className="w-16 h-16 border-4 border-red-800 border-t-transparent rounded-full animate-spin shadow-lg" />
         <p className="text-xl font-medium text-gray-700 animate-pulse">
-          Confirming rituals...
+          Processing contribution...
         </p>
       </div>
     );
@@ -383,8 +383,7 @@ export const DonationPage: React.FC<{
           Devotional Contribution
         </h2>
         <p className="text-gray-600">
-          Your contribution supports the holy rituals and community Bhandara at
-          Tetarpur.
+          Your contribution supports community programs and charitable activities at Springfield.
         </p>
       </div>
 

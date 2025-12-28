@@ -59,7 +59,7 @@ export const Schedule: React.FC<{ state: AppState }> = ({ state }) => {
     <div className="space-y-8 animate-fade-in">
       <div className="text-center animate-slide-up">
         <h2 className="text-3xl font-bold text-red-900 mb-2 font-serif">Event Schedule</h2>
-        <p className="text-gray-600">Daily rituals and auspicious timings</p>
+        <p className="text-gray-600">Daily activities and event timings</p>
       </div>
 
       <div className="space-y-8">

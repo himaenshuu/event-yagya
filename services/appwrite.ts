@@ -4,13 +4,13 @@ const APPWRITE_CONFIG = {
   ENDPOINT:
     import.meta.env.VITE_APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1",
   PROJECT_ID:
-    import.meta.env.VITE_APPWRITE_PROJECT_ID || "694d4f82000b90293d9c",
+    import.meta.env.VITE_APPWRITE_PROJECT_ID || "YOUR_PROJECT_ID_HERE",
   DATABASE_ID:
-    import.meta.env.VITE_APPWRITE_DATABASE_ID || "694d4fee0004a8ea4c4f",
+    import.meta.env.VITE_APPWRITE_DATABASE_ID || "YOUR_DATABASE_ID_HERE",
   // Note: Appwrite now calls these "Tables" instead of "Collections"
   COLLECTION_ID:
-    import.meta.env.VITE_APPWRITE_COLLECTION_ID || "694d72bc001cf1f14f87",
-  BUCKET_ID: import.meta.env.VITE_APPWRITE_BUCKET_ID || "694d50760003519badde",
+    import.meta.env.VITE_APPWRITE_COLLECTION_ID || "YOUR_COLLECTION_ID_HERE",
+  BUCKET_ID: import.meta.env.VITE_APPWRITE_BUCKET_ID || "YOUR_BUCKET_ID_HERE",
 };
 
 const client = new Client()
@@ -31,7 +31,7 @@ async function generateVerificationHash(
   timestamp: string
 ): Promise<string> {
   const secret =
-    import.meta.env.VITE_VERIFICATION_SECRET || "yagya-secret-2024";
+    import.meta.env.VITE_VERIFICATION_SECRET || "CHANGE_THIS_SECRET";
   const payload = `${passId}:${amount}:${timestamp}:${secret}`;
 
   // Import bcryptjs for client-side compatibility
@@ -259,44 +259,26 @@ export const appwriteService = {
    * Validates verificationHash for authenticity.
    */
   async verifyFromCloud(searchId: string) {
-    console.log("🔍 [VERIFY] Starting verification for:", searchId);
-
     try {
       const trimmedId = searchId.trim();
-      console.log("🔍 [VERIFY] Trimmed ID:", trimmedId);
-      console.log("🔍 [VERIFY] Database ID:", APPWRITE_CONFIG.DATABASE_ID);
-      console.log("🔍 [VERIFY] Collection ID:", APPWRITE_CONFIG.COLLECTION_ID);
 
       // Try searching by passId first (UUID format)
-      console.log("🔍 [VERIFY] Attempt 1: Searching by passId field...");
       let response = await databases.listDocuments(
         APPWRITE_CONFIG.DATABASE_ID,
         APPWRITE_CONFIG.COLLECTION_ID,
         [Query.equal("passId", trimmedId), Query.limit(1)]
       );
-      console.log("🔍 [VERIFY] passId search result:", {
-        found: response.documents.length,
-        total: response.total,
-      });
 
       // Fallback: try searching by transactionId (YGYA-XXXXX format)
       if (response.documents.length === 0) {
-        console.log(
-          "🔍 [VERIFY] Attempt 2: Searching by transactionId field..."
-        );
         response = await databases.listDocuments(
           APPWRITE_CONFIG.DATABASE_ID,
           APPWRITE_CONFIG.COLLECTION_ID,
           [Query.equal("transactionId", trimmedId), Query.limit(1)]
         );
-        console.log("🔍 [VERIFY] transactionId search result:", {
-          found: response.documents.length,
-          total: response.total,
-        });
       }
 
       if (response.documents.length === 0) {
-        console.log("❌ [VERIFY] No documents found in database");
         return {
           valid: false,
           message: "Pass not found in database",
@@ -305,32 +287,19 @@ export const appwriteService = {
       }
 
       const doc = response.documents[0];
-      console.log("✅ [VERIFY] Document found:", {
-        passId: doc.passId,
-        transactionId: doc.transactionId,
-        amount: doc.amount,
-        name: doc.name,
-        hasVerificationHash: !!doc.verificationHash,
-      });
 
       // Verify hash authenticity using bcrypt
-      console.log("🔐 [VERIFY] Verifying hash with bcrypt...");
       const bcrypt = await import("bcryptjs");
       const secret =
-        import.meta.env.VITE_VERIFICATION_SECRET || "yagya-secret-2024";
+        import.meta.env.VITE_VERIFICATION_SECRET || "CHANGE_THIS_SECRET";
 
       // Normalize timestamp - Appwrite adds +00:00 suffix, normalize to Z format
       const normalizedTimestamp = doc.transactionDate.replace("+00:00", "Z");
       const payload = `${doc.passId}:${doc.amount}:${normalizedTimestamp}:${secret}`;
 
       const isValid = await bcrypt.compare(payload, doc.verificationHash);
-      console.log("🔐 [VERIFY] Hash comparison:", {
-        stored: doc.verificationHash?.substring(0, 16) + "...",
-        isValid: isValid,
-      });
 
       if (!isValid) {
-        console.log("❌ [VERIFY] Hash mismatch - pass may be tampered");
         return {
           valid: false,
           message: "Pass has been tampered with",
@@ -338,19 +307,12 @@ export const appwriteService = {
         };
       }
 
-      console.log("✅ [VERIFY] Verification successful!");
       return {
         valid: true,
         message: "Pass verified successfully",
         data: doc,
       };
     } catch (error: any) {
-      console.error("❌ [VERIFY] Error during verification:", {
-        message: error.message,
-        code: error.code,
-        type: error.type,
-        response: error.response,
-      });
       if (import.meta.env.DEV) {
         console.error(
           "Appwrite Verification Query Error:",

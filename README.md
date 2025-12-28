@@ -1,8 +1,8 @@
 
 
-# Maha Satchandi Mahayagya Event Management App
+# Annual Community Festival Event Management App
 
-A secure, full-featured event management application for the Maha Satchandi Mahayagya spiritual event.
+A secure, full-featured event management application for community gatherings and charitable events.
 
 ## Features
 
@@ -25,25 +25,14 @@ A secure, full-featured event management application for the Maha Satchandi Maha
    ```
 
 2. Configure environment variables in `.env.local`:
-   ```env
-   # Gemini API (for local development only)
-   GEMINI_API_KEY=your_gemini_api_key
-   
-   # Appwrite Configuration
-   VITE_APPWRITE_ENDPOINT=your_endpoint
-   VITE_APPWRITE_PROJECT_ID=your_project_id
-   VITE_APPWRITE_DATABASE_ID=your_database_id
-   VITE_APPWRITE_COLLECTION_ID=your_collection_id
-   VITE_APPWRITE_BUCKET_ID=your_bucket_id
-   
-   # Admin Password Hash (server-side only)
-   # Generate hash using: node scripts/generate-password-hash.js YourPassword
-   ADMIN_PASSWORD_HASH=your_sha256_hash_here
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your actual credentials
    ```
 
    **Generate admin password hash:**
    ```bash
-   node scripts/generate-password-hash.js Admin@Yagya2024
+   node scripts/generate-password-hash.js YourSecurePassword
    # Copy the hash to ADMIN_PASSWORD_HASH in .env.local
    ```
 

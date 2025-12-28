@@ -1,6 +1,6 @@
 
-// Service Worker for Maha Satchandi Mahayagya
-const CACHE_NAME = 'yagya-cache-v1';
+// Service Worker for Community Festival Event App
+const CACHE_NAME = 'community-event-cache-v1';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

@@ -46,7 +46,7 @@ export const Updates: React.FC<{ state: AppState }> = ({ state }) => {
     <div className="space-y-6 animate-fade-in">
       <div className="text-center animate-slide-up">
         <h2 className="text-3xl font-bold text-red-900 mb-2 font-serif">Ongoing Updates</h2>
-        <p className="text-gray-600">Live moments from Tetarpur</p>
+        <p className="text-gray-600">Live moments from Springfield Community Center</p>
       </div>
 
       <div className="space-y-8">

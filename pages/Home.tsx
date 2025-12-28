@@ -27,23 +27,23 @@ declare var Html5Qrcode: any;
 
 const ORGANIZERS = [
   {
-    name: "Pt. Rameshwar Pandey",
-    role: "Chief Coordinator",
-    phone: "+91 98765 43210",
+    name: "John Anderson",
+    role: "Event Director",
+    phone: "+1 555-0101",
     image:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200&h=200",
   },
   {
-    name: "Shri Alok Singh",
-    role: "Event Management",
-    phone: "+91 87654 32109",
+    name: "Sarah Mitchell",
+    role: "Coordination Head",
+    phone: "+1 555-0102",
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200",
   },
   {
-    name: "Shri Deepankar Jha",
-    role: "Treasury & Bhandara",
-    phone: "+91 76543 21098",
+    name: "Michael Chen",
+    role: "Volunteer Manager",
+    phone: "+1 555-0103",
     image:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200&h=200",
   },
@@ -77,10 +77,8 @@ export const Home: React.FC<{ state: AppState }> = ({ state }) => {
   const handleVerify = async (e?: React.FormEvent, customTxnId?: string) => {
     e?.preventDefault();
     const idToVerify = customTxnId || txnId;
-    console.log("🏠 [HOME] Verify initiated with ID:", idToVerify);
 
     if (!idToVerify) {
-      console.log("⚠️ [HOME] No ID provided, aborting");
       return;
     }
 
@@ -89,16 +87,9 @@ export const Home: React.FC<{ state: AppState }> = ({ state }) => {
 
     // Always verify from Appwrite Cloud database for security and reliability
     try {
-      console.log("🏠 [HOME] Calling appwriteService.verifyFromCloud...");
       const cloudResult = await appwriteService.verifyFromCloud(idToVerify);
-      console.log("🏠 [HOME] Cloud verification result:", {
-        valid: cloudResult?.valid,
-        message: cloudResult?.message,
-        hasData: !!cloudResult?.data,
-      });
 
       if (cloudResult && cloudResult.valid && cloudResult.data) {
-        console.log("✅ [HOME] Pass verified successfully, displaying result");
         setVerifyResult({
           id: cloudResult.data.passId,
           donorName: cloudResult.data.name,
@@ -111,17 +102,14 @@ export const Home: React.FC<{ state: AppState }> = ({ state }) => {
           paymentMethod: cloudResult.data.paymentMethod,
         });
       } else {
-        console.log("❌ [HOME] Pass not found or invalid");
         setVerifyResult("not_found");
       }
     } catch (error) {
-      console.error("❌ [HOME] Verification error:", error);
       if (import.meta.env.DEV) console.error("Verification error:", error);
       setVerifyResult("not_found");
     } finally {
       setIsVerifying(false);
       if (isScanning) stopScanner();
-      console.log("🏠 [HOME] Verification complete");
     }
   };
 
@@ -175,7 +163,7 @@ export const Home: React.FC<{ state: AppState }> = ({ state }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-red-950 via-red-900/40 to-transparent z-10" />
         <img
           src="https://picsum.photos/seed/spirituality/1200/600"
-          alt="Maha Satchandi Yagya"
+          alt="Community Festival"
           className="w-full h-[300px] md:h-[450px] object-cover group-hover:scale-110 transition-transform duration-[3s] ease-out"
         />
         <div className="absolute inset-x-0 bottom-0 z-20 p-8 md:p-12">
@@ -348,7 +336,7 @@ export const Home: React.FC<{ state: AppState }> = ({ state }) => {
               ))}
             </div>
             <p className="text-center text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] pt-2">
-              Tetarpur Management Committee
+              Springfield Event Committee
             </p>
           </div>
         </div>

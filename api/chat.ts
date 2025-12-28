@@ -146,7 +146,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     // Event context for the chatbot
-    const eventContext = `You are a helpful assistant for the Maha Satchandi Mahayagya event. 
+    const eventContext = `You are a helpful assistant for the Annual Community Festival event. 
     This is a spiritual event with donations, schedules, and updates. 
     Answer questions about the event, donation process, schedules, and general information.
     Keep responses concise and helpful.`;

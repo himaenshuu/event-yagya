@@ -104,7 +104,7 @@ export const AdminDashboard: React.FC<{
     link.setAttribute("href", encodedUri);
     link.setAttribute(
       "download",
-      `yagya_donations_${new Date().toISOString().split("T")[0]}.csv`
+      `donations_${new Date().toISOString().split("T")[0]}.csv`
     );
     document.body.appendChild(link);
     link.click();
@@ -113,22 +113,15 @@ export const AdminDashboard: React.FC<{
 
   const handleVerifyPass = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("👨‍💼 [ADMIN] Verify initiated with ID:", verifyPassId);
 
     setIsVerifying(true);
     setVerificationResult(null);
 
     try {
-      console.log("👨‍💼 [ADMIN] Calling appwriteService.verifyFromCloud...");
       const result = await appwriteService.verifyFromCloud(verifyPassId.trim());
-      console.log("👨‍💼 [ADMIN] Verification result:", {
-        valid: result?.valid,
-        message: result?.message,
-        hasData: !!result?.data,
-      });
       setVerificationResult(result);
     } catch (error) {
-      console.error("❌ [ADMIN] Verification error:", error);
+      console.error("Verification error:", error);
       setVerificationResult({
         valid: false,
         message: "Verification error occurred",
@@ -136,7 +129,6 @@ export const AdminDashboard: React.FC<{
       });
     } finally {
       setIsVerifying(false);
-      console.log("👨‍💼 [ADMIN] Verification complete");
     }
   };
 
@@ -158,7 +150,7 @@ export const AdminDashboard: React.FC<{
             Management Console
           </h2>
           <p className="text-gray-500 mt-2 font-medium">
-            Overseeing the sacred Maha Satchandi Mahayagya rituals.
+            Overseeing the Annual Community Festival activities.
           </p>
         </div>
 
@@ -698,7 +690,7 @@ export const AdminDashboard: React.FC<{
                   </h3>
                   <p className="text-gray-500 max-w-md mx-auto">
                     Manage the public availability and status of the Maha
-                    Satchandi Mahayagya platform.
+                    Community Festival platform.
                   </p>
                 </div>
 

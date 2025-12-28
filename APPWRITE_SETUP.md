@@ -7,11 +7,11 @@
 ## Step 1: Get Your Table ID (formerly Collection ID)
 
 1. Go to [Appwrite Console](https://cloud.appwrite.io)
-2. Select your project: **694d4f82000b90293d9c**
-3. Navigate to **Databases** → Click on database **694d4fee0004a8ea4c4f**
+2. Select your project: **[YOUR_PROJECT_ID]**
+3. Navigate to **Databases** → Click on database **[YOUR_DATABASE_ID]**
 4. You should see your tables listed
 5. Click on the table (might be named "receipt" or "donations")
-6. Copy the **Table ID** from the top of the page (it's a long alphanumeric string like `694d72bc001cf1f14f87`)
+5. Copy the **Table ID** from the top of the page (it's a long alphanumeric string like `[YOUR_TABLE_ID]`)
 
 ## Step 2: Fix 401 Unauthorized Error - Configure Permissions
 
@@ -19,7 +19,7 @@ The 401 error means your table doesn't allow public write access. You need to co
 
 ### Option A: Allow Any User (Recommended for donations)
 1. In Appwrite Console, go to your **Database** → **Tables**
-2. Click on your table (ID: `694d72bc001cf1f14f87`)
+2. Click on your table (ID: `[YOUR_TABLE_ID]`)
 3. Go to **Settings** tab
 4. Scroll to **Permissions** section
 5. Click **"Add Permission"**
@@ -70,10 +70,10 @@ npm run dev
 
 ## Current Configuration
 
-- **Project ID**: 694d4f82000b90293d9c ✅
-- **Database ID**: 694d4fee0004a8ea4c4f ✅
-- **Bucket ID**: 694d50760003519badde ✅
-- **Table ID** (Collection ID): 694d72bc001cf1f14f87 ✅
+- **Project ID**: [YOUR_PROJECT_ID] ✅
+- **Database ID**: [YOUR_DATABASE_ID] ✅
+- **Bucket ID**: [YOUR_BUCKET_ID] ✅
+- **Table ID** (Collection ID): [YOUR_TABLE_ID] ✅
 - **Platform Hostname**: ✅ `localhost` (Configured!)
 - **Permissions**: ⚠️ Need to configure (see Step 2)
 

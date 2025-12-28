@@ -13,7 +13,7 @@ import { appwriteService } from "./services/appwrite";
 
 const App: React.FC = () => {
   const [state, setState] = useState<AppState>(() => {
-    const saved = localStorage.getItem("mahayagya_state");
+    const saved = localStorage.getItem("community_event_state");
     if (saved) {
       const parsed = JSON.parse(saved);
       // Don't load donations from localStorage - always fetch from DB
@@ -46,7 +46,7 @@ const App: React.FC = () => {
       eventInfo: state.eventInfo,
       donations: [], // Don't persist donations to localStorage
     };
-    localStorage.setItem("mahayagya_state", JSON.stringify(stateToSave));
+    localStorage.setItem("community_event_state", JSON.stringify(stateToSave));
   }, [state]);
 
   const triggerLocalNotification = (title: string, body: string) => {
@@ -55,9 +55,9 @@ const App: React.FC = () => {
         // Fix: Use type assertion to any as 'vibrate' is a valid ServiceWorker notification property but often missing from base NotificationOptions types
         registration.showNotification(title, {
           body,
-          icon: "https://picsum.photos/seed/yagya/100/100",
+          icon: "https://picsum.photos/seed/community/100/100",
           vibrate: [200, 100, 200],
-          tag: "yagya-update",
+          tag: "event-update",
           renotify: true,
         } as any);
       });
@@ -162,7 +162,7 @@ const App: React.FC = () => {
     if (oldStatus !== status) {
       triggerLocalNotification(
         "Event Status Changed",
-        `The Mahayagya is now ${status}`
+        `The event is now ${status}`
       );
     }
   };
