@@ -168,56 +168,76 @@ export const DonationPage: React.FC<{
       const images = element.querySelectorAll("img");
       await Promise.all(
         Array.from(images).map((img) => {
-          if (img.complete) return Promise.resolve();
-          return new Promise((resolve) => {
-            img.onload = resolve;
-            img.onerror = resolve;
-            // Force reload if not loaded
-            if (!img.complete) {
-              const src = img.src;
-              img.src = "";
-              img.src = src;
-            }
+          if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
+          return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => resolve(), 5000); // 5s timeout
+            img.onload = () => {
+              clearTimeout(timeout);
+              resolve();
+            };
+            img.onerror = () => {
+              clearTimeout(timeout);
+              resolve(); // Continue even if image fails
+            };
           });
         })
       );
 
       // Small delay to ensure rendering is complete
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // High-quality rendering settings
+      // High-quality rendering settings - relaxed CORS for external images
       const canvas = await html2canvas(element, {
-        scale: 3, // Fixed high resolution
+        scale: 2, // Balanced quality and performance
         backgroundColor: "#ffffff",
         useCORS: true,
-        logging: true, // Enable logging to debug
-        allowTaint: false, // Strict CORS
-        foreignObjectRendering: false, // More reliable rendering
-        imageTimeout: 0, // Already waited for images
+        logging: false,
+        allowTaint: true, // Allow external images (QR code)
+        foreignObjectRendering: false,
+        imageTimeout: 0,
         width: element.offsetWidth,
         height: element.offsetHeight,
         x: 0,
         y: 0,
+        onclone: (clonedDoc) => {
+          // Ensure cloned element is visible
+          const clonedElement = clonedDoc.getElementById("devotee-pass");
+          if (clonedElement) {
+            clonedElement.style.display = "block";
+            clonedElement.style.visibility = "visible";
+          }
+        },
       });
 
       // Verify canvas has content
-      if (canvas.width === 0 || canvas.height === 0) {
-        throw new Error("Canvas has no dimensions");
+      if (!canvas || canvas.width === 0 || canvas.height === 0) {
+        throw new Error("Canvas rendering failed - no dimensions");
       }
 
-      // Convert to high-quality PNG (lossless)
+      // Convert to high-quality PNG
       const image = canvas.toDataURL("image/png", 1.0);
 
       // Verify image has content (not just header)
       if (image.length < 1000) {
-        throw new Error("Generated image appears to be empty");
+        throw new Error("Generated image is too small - likely empty");
       }
 
+      // Download the image
       const link = document.createElement("a");
       link.download = `Contribution_Pass_${receipt?.transactionId}.png`;
       link.href = image;
       document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+    } catch (error: any) {
+      console.error("Image save error:", error);
+      // Provide more helpful error message
+      const errorMsg = error.message || "Unknown error occurred";
+      alert(`Failed to save image: ${errorMsg}\n\nPlease try:\n1. Taking a screenshot instead\n2. Ensuring your browser allows downloads\n3. Checking your internet connection`);
+    } finally {
+      setIsSaving(false);
+    }
+  };
       document.body.removeChild(link);
     } catch (error) {
       if (import.meta.env.DEV) console.error("Save failed:", error);
@@ -292,7 +312,7 @@ export const DonationPage: React.FC<{
 
         <div
           id="devotee-pass"
-          className="relative mx-auto w-full max-w-[320px] bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border-4 animate-glow"
+          className="relative mx-auto w-full max-w-[320px] bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border-4 animate-glow transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(234,88,12,0.6),0_0_80px_rgba(234,88,12,0.4)] hover:-translate-y-2 cursor-pointer"
           style={{ borderColor: "#edb20033" }}
         >
           <div
