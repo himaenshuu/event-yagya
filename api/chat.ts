@@ -73,6 +73,14 @@ function getClientIP(req: VercelRequest): string {
   return "unknown";
 }
 
+  function cleanAIResponse(text: string): string {
+   if (!text) return "";
+   return text
+     .replace(/\n{3,}/g, "\n\n")
+     .replace(/^\s*[-*]\s+/gm, "")
+     .trim();
+   }
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -156,18 +164,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `${eventContext}\n\nUser: ${sanitizedMessage}`
     );
 
-  function cleanAIResponse(text: string): string {
-   if (!text) return "";
-   return text
-     .replace(/\n{3,}/g, "\n\n")
-     .replace(/^\s*[-*]\s+/gm, "")
-     .trim();
-   }
-
     const response = await result.response;
     
     const rawtext = response.text();
-    const cleanedText = cleanAIResponse(rawText);
+    const cleanedText = cleanAIResponse(rawtext);
     
    return res.status(200).json({ response: cleanedText });
   } catch (error) {
