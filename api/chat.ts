@@ -158,11 +158,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   function cleanAIResponse(text: string): string {
    if (!text) return "";
-   return text.replace(/\n{3,}/g, "\n\n").replace(/^\s*[-*]\s+/gm, "").trim();
+   return text
+     .replace(/\n{3,}/g, "\n\n")
+     .replace(/^\s*[-*]\s+/gm, "")
+     .trim();
    }
 
     const response = await result.response;
-    const text = response.text();
+    
+    const rawtext = response.text();
     const cleanedText = cleanAIResponse(rawText);
     
    return res.status(200).json({ response: cleanedText });
