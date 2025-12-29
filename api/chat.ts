@@ -1,7 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Initialize Gemini AI with API key from environment
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 // Rate limiting configuration
@@ -147,18 +146,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Event context for the chatbot
     const eventContext = `You are a helpful assistant for the Annual Community Festival event. 
-    This is a spiritual event with donations, schedules, and updates. 
-    Answer questions about the event, donation process, schedules, and general information.
+    This is a spiritual event with donations, schedules, and updates. This event is scheduled
+    for 20 february to 28 february. There will be 5 saints. Parsad will be distributed daily.
+    Answer questions about the event, donation process, schedules,and general information.
     Keep responses concise and helpful.`;
 
     // Generate response
     const result = await model.generateContent(
       `${eventContext}\n\nUser: ${sanitizedMessage}`
     );
+
+  function cleanAIResponse(text: string): string {
+   if (!text) return "";
+   return text.replace(/\n{3,}/g, "\n\n").replace(/^\s*[-*]\s+/gm, "").trim();
+   }
+
     const response = await result.response;
     const text = response.text();
-
-    return res.status(200).json({ response: text });
+    const cleanedText = cleanAIResponse(rawText);
+    
+   return res.status(200).json({ response: cleanedText });
   } catch (error) {
     console.error("Gemini API error:", error);
 
