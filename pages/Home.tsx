@@ -85,7 +85,6 @@ export const Home: React.FC<{ state: AppState }> = ({ state }) => {
     setIsVerifying(true);
     setVerifyResult(null);
 
-    // Always verify from Appwrite Cloud database for security and reliability
     try {
       const cloudResult = await appwriteService.verifyFromCloud(idToVerify);
 

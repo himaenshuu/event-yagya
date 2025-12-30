@@ -36,7 +36,6 @@ export const DonationPage: React.FC<{
     e.preventDefault();
     setErrorMessage(null);
 
-    // Validate donation amount
     const amount = Number(formData.amount);
     if (!amount || amount <= 0) {
       setErrorMessage("Please enter a valid donation amount greater than ₹0");
@@ -48,17 +47,14 @@ export const DonationPage: React.FC<{
       return;
     }
 
-    // Sanitize inputs to prevent XSS and limit length
     const sanitizedName = (formData.name || "").trim().slice(0, 100);
     const sanitizedPurpose = (formData.purpose || "").trim().slice(0, 500);
 
     setStep("processing");
 
     try {
-      // Generate cryptographically secure pass ID
       const passId = crypto.randomUUID();
 
-      // Get next sequential receipt ID from database (globally unique)
       const receiptId = await appwriteService.getNextReceiptId();
 
       const newDonation: Donation = {
@@ -67,8 +63,8 @@ export const DonationPage: React.FC<{
         amount: amount,
         purpose: sanitizedPurpose,
         timestamp: new Date().toISOString(),
-        transactionId: `ACF-${receiptId}`, // Human-readable display ID
-        passId: passId, // Secure UUID for verification
+        transactionId: `ACF-${receiptId}`,
+        passId: passId,
         receiptId: receiptId,
         paymentMethod: "mobile_payment",
         status: "Success",
@@ -79,7 +75,6 @@ export const DonationPage: React.FC<{
 
       setTimeout(() => {
         setStep("success");
-        // Wait for UI to render and external images (QR) to potentially load
         setTimeout(() => syncToCloud(newDonation), 1000);
       }, 1200);
     } catch (error: any) {
@@ -98,13 +93,10 @@ export const DonationPage: React.FC<{
     setSyncStatus("syncing");
     setErrorMessage(null);
     try {
-      // 1. Save metadata to Appwrite Database
       await appwriteService.saveDonationDetails(donation);
 
-      // 2. Generate and upload image
       const element = document.getElementById("devotee-pass");
       if (element) {
-        // Wait for all images in the pass to load before capturing
         const images = element.getElementsByTagName("img");
         await Promise.all(
           Array.from(images).map((img) => {
@@ -116,7 +108,6 @@ export const DonationPage: React.FC<{
           })
         );
 
-        // High-quality rendering for cloud storage
         const canvas = await html2canvas(element, {
           scale: window.devicePixelRatio * 2,
           useCORS: true,
@@ -164,35 +155,32 @@ export const DonationPage: React.FC<{
 
     setIsSaving(true);
     try {
-      // Wait for all images (especially QR code) to fully load
       const images = element.querySelectorAll("img");
       await Promise.all(
         Array.from(images).map((img) => {
           if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
           return new Promise((resolve, reject) => {
-            const timeout = setTimeout(() => resolve(), 5000); // 5s timeout
+            const timeout = setTimeout(() => resolve(), 5000);
             img.onload = () => {
               clearTimeout(timeout);
               resolve();
             };
             img.onerror = () => {
               clearTimeout(timeout);
-              resolve(); // Continue even if image fails
+              resolve();
             };
           });
         })
       );
 
-      // Small delay to ensure rendering is complete
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // High-quality rendering settings - relaxed CORS for external images
       const canvas = await html2canvas(element, {
-        scale: 2, // Balanced quality and performance
+        scale: 2,
         backgroundColor: "#ffffff",
         useCORS: true,
         logging: false,
-        allowTaint: true, // Allow external images (QR code)
+        allowTaint: true,
         foreignObjectRendering: false,
         imageTimeout: 0,
         width: element.offsetWidth,
@@ -200,7 +188,6 @@ export const DonationPage: React.FC<{
         x: 0,
         y: 0,
         onclone: (clonedDoc) => {
-          // Ensure cloned element is visible
           const clonedElement = clonedDoc.getElementById("devotee-pass");
           if (clonedElement) {
             clonedElement.style.display = "block";
@@ -209,20 +196,16 @@ export const DonationPage: React.FC<{
         },
       });
 
-      // Verify canvas has content
       if (!canvas || canvas.width === 0 || canvas.height === 0) {
         throw new Error("Canvas rendering failed - no dimensions");
       }
 
-      // Convert to high-quality PNG
       const image = canvas.toDataURL("image/png", 1.0);
 
-      // Verify image has content (not just header)
       if (image.length < 1000) {
         throw new Error("Generated image is too small - likely empty");
       }
 
-      // Download the image
       const link = document.createElement("a");
       link.download = `Contribution_Pass_${receipt?.transactionId}.png`;
       link.href = image;
@@ -231,7 +214,6 @@ export const DonationPage: React.FC<{
       document.body.removeChild(link);
     } catch (error: any) {
       console.error("Image save error:", error);
-      // Provide more helpful error message
       const errorMsg = error.message || "Unknown error occurred";
       alert(
         `Failed to save image: ${errorMsg}\n\nPlease try:\n1. Taking a screenshot instead\n2. Ensuring your browser allows downloads\n3. Checking your internet connection`
@@ -256,7 +238,6 @@ export const DonationPage: React.FC<{
   };
 
   if (step === "success" && receipt) {
-    // Use passId for QR code verification (secure UUID)
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${receipt.passId}`;
 
     return (

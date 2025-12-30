@@ -56,7 +56,6 @@ export const Layout: React.FC<{
         </div>
       </header>
 
-      {/* Desktop Sidebar - Premium Dark Red */}
       <aside className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-red-950 text-white z-50 animate-slide-right shadow-2xl">
         <div className="p-8">
           <div className="flex items-center gap-3 mb-8 hover:scale-105 transition-transform cursor-default origin-left">
@@ -140,7 +139,6 @@ export const Layout: React.FC<{
         </div>
       </footer>
 
-      {/* Mobile Bottom Navigation - Floating look */}
       <nav className="md:hidden fixed bottom-6 left-6 right-6 glass border border-white rounded-[2rem] shadow-2xl flex justify-around items-center h-16 px-4 z-50 animate-slide-up">
         {navItems.map((item) => (
           <Link

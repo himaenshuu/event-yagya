@@ -42,11 +42,9 @@ export const AdminDashboard: React.FC<{
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // Fetch donations from database instead of using localStorage
   const [donations, setDonations] = useState<Donation[]>([]);
   const [isLoadingDonations, setIsLoadingDonations] = useState(true);
 
-  // Fetch donations from database on component mount
   useEffect(() => {
     const loadDonations = async () => {
       setIsLoadingDonations(true);
@@ -177,7 +175,6 @@ export const AdminDashboard: React.FC<{
         </nav>
       </header>
 
-      {/* Main Content Area */}
       <div className="transition-all duration-500 ease-in-out">
         {tab === "donations" && (
           <div className="space-y-8 animate-scale-in">
@@ -247,7 +244,6 @@ export const AdminDashboard: React.FC<{
               </button>
             </div>
 
-            {/* Transaction Ledger Card */}
             <div className="bg-white rounded-[3rem] shadow-xl border border-gray-50 overflow-hidden">
               <div className="p-8 border-b border-gray-50 flex items-center justify-between">
                 <div>
@@ -391,7 +387,6 @@ export const AdminDashboard: React.FC<{
                 </button>
               </form>
 
-              {/* Verification Result */}
               {verificationResult && (
                 <div
                   className={`mt-8 p-8 rounded-3xl border-2 ${

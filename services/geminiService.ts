@@ -1,7 +1,3 @@
-// Gemini API is now secured via Vercel serverless function
-// The API key is stored server-side and never exposed to the client
-// Rate limiting: 10 requests per minute per IP address
-
 const isDevelopment = import.meta.env.DEV;
 const isLocalhost = () => {
   const hostname = window.location.hostname;
@@ -10,9 +6,8 @@ const isLocalhost = () => {
 
 export async function askGeminiAboutEvent(question: string) {
   try {
-    // Check if serverless function is available in development
     if (isDevelopment && isLocalhost()) {
-      return `🔧 Development Mode: Gemini AI requires Vercel serverless functions.
+      return ` Development Mode: Gemini AI requires Vercel serverless functions.
 
 To test locally with AI:
 1. Install Vercel CLI: npm i -g vercel
@@ -21,8 +16,6 @@ To test locally with AI:
 
 Or deploy to production to use the AI chatbot.`;
     }
-
-    // Call the Vercel serverless API endpoint
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
@@ -39,12 +32,12 @@ Or deploy to production to use the AI chatbot.`;
       // Handle rate limit errors specifically
       if (response.status === 429) {
         const retryAfter = errorData.retryAfter || 60;
-        return `⏱️ You've reached the rate limit. Please wait ${retryAfter} seconds before asking another question. This helps us manage server costs and ensure fair access for everyone.`;
+        return ` You've reached the rate limit. Please wait ${retryAfter} seconds before asking another question. This helps us manage server costs and ensure fair access for everyone.`;
       }
 
       // Handle 404 (function not deployed)
       if (response.status === 404) {
-        return `⚠️ AI chatbot is not available. The serverless function may not be deployed yet. Please deploy to Vercel or run 'vercel dev' locally.`;
+        return ` AI chatbot is not available. The serverless function may not be deployed yet. Please deploy to Vercel or run 'vercel dev' locally.`;
       }
 
       // Handle other errors

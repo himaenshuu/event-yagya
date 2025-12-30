@@ -51,22 +51,7 @@ await argon2.hash(password, {
 - **Side-channel resistant**: Argon2id combines timing attack resistance
 - **Future-proof**: Recommended by OWASP (2023)
 
-### 4. **Timestamp Normalization Bug Fix**
-Discovered and fixed a critical Appwrite Cloud timestamp bug:
-
-```typescript
-// Problem: Appwrite normalizes ISO 8601 timestamps
-// Saved: "2025-12-28T17:25:42.766Z"
-// Retrieved: "2025-12-28T17:25:42.766+00:00"  ❌ Hash mismatch!
-
-// Solution: Normalize before hashing
-const normalizedTimestamp = doc.transactionDate.replace('+00:00', 'Z');
-const payload = `${passId}:${amount}:${normalizedTimestamp}:${secret}`;
-```
-
-This fix ensures **100% hash verification success rate** across all Appwrite regions.
-
-### 5. **Serverless Security Architecture**
+### 4. **Serverless Security Architecture**
 All sensitive operations execute server-side via **Vercel Edge Functions**:
 
 ```typescript
@@ -89,7 +74,7 @@ const isValid = await argon2.verify(
 - Rate limiting enforced at edge (IP-based)
 - Zero-trust architecture
 
-### 6. **Race Condition Prevention**
+### 5. **Race Condition Prevention**
 Implemented collision-resistant receipt ID generation with **retry logic**:
 
 ```typescript
@@ -110,7 +95,7 @@ async getNextReceiptId(maxRetries = 5) {
 
 Handles concurrent donations without ID collisions.
 
-### 7. **Cryptographically Secure Pass IDs**
+### 6. **Cryptographically Secure Pass IDs**
 Uses Web Crypto API for UUID generation:
 
 ```typescript
@@ -123,7 +108,7 @@ const passId = crypto.randomUUID();  // 122-bit entropy
 - Unpredictable (CSPRNG-based)
 - Globally unique without coordination
 
-### 8. **Real-Time Cloud Sync with Fallback**
+### 7. **Real-Time Cloud Sync with Fallback**
 Donations sync to Appwrite Cloud with **offline-first strategy**:
 
 ```typescript

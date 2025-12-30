@@ -1,8 +1,5 @@
 import argon2 from "argon2";
 
-// Helper script to generate admin password hash using argon2
-// Usage: node scripts/generate-password-hash.js YourPassword
-
 const password = process.argv[2];
 
 if (!password) {
