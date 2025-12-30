@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="flameGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ee5a6f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c92a2a;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="48" fill="#fffbf5" stroke="#c92a2a" stroke-width="2"/>
+  
+  <!-- Om Symbol (ॐ) Stylized -->
+  <g fill="url(#flameGradient)" filter="url(#glow)">
+    <!-- Main Om body -->
+    <path d="M 35 55 Q 30 50 30 45 Q 30 35 40 32 Q 45 30 50 35 Q 52 38 50 42 L 45 45 Q 42 47 40 45 Q 38 43 40 40 Q 42 38 45 40" stroke="#c92a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Right curve -->
+    <path d="M 50 35 Q 58 33 62 38 Q 65 42 63 47 Q 61 52 56 53" stroke="#c92a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Bottom curve -->
+    <path d="M 40 55 Q 45 60 55 60 Q 60 60 62 55" stroke="#c92a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Top dot -->
+    <circle cx="50" cy="25" r="3" fill="#c92a2a"/>
+    
+    <!-- Top arc -->
+    <path d="M 35 30 Q 50 25 65 30" stroke="#c92a2a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    
+    <!-- Flame/Diya element at bottom -->
+    <ellipse cx="50" cy="75" rx="12" ry="5" fill="#ffc078" opacity="0.6"/>
+    <path d="M 50 72 Q 45 68 46 62 Q 47 58 50 55 Q 53 58 54 62 Q 55 68 50 72 Z" fill="#ff6b6b" opacity="0.9"/>
+    <path d="M 50 70 Q 48 67 48 64 Q 48 61 50 58 Q 52 61 52 64 Q 52 67 50 70 Z" fill="#ffd700" opacity="0.8"/>
+  </g>
+</svg>

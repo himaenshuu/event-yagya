@@ -1,0 +1,7 @@
+{
+  "name": "Maha Satchandi Mahayagya",
+  "description": "A comprehensive community platform for the Maha Satchandi Mahayagya event at Tetarpur, Siswar, featuring live updates, event schedules, secure donations, and admin management.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
