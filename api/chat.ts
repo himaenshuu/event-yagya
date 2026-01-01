@@ -3,12 +3,15 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-const RATE_LIMIT_WINDOW = 60 * 1000;
-const MAX_REQUESTS_PER_WINDOW = 10;
-const MAX_MESSAGE_LENGTH = 500;
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW = 60 * 1000; 
+const MAX_REQUESTS_PER_WINDOW = 10; 
+const MAX_MESSAGE_LENGTH = 500; 
 
+// In-memory rate limit store (resets on cold starts)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
+// Cleanup old entries periodically to prevent memory leaks
 function cleanupRateLimitStore() {
   const now = Date.now();
   for (const [ip, data] of rateLimitStore.entries()) {
@@ -18,6 +21,7 @@ function cleanupRateLimitStore() {
   }
 }
 
+// Check rate limit for an IP address
 function checkRateLimit(ip: string): {
   allowed: boolean;
   remaining: number;
@@ -34,10 +38,13 @@ function checkRateLimit(ip: string): {
     return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - 1, resetTime };
   }
 
+  // Window still active
   if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    // Rate limit exceeded
     return { allowed: false, remaining: 0, resetTime: record.resetTime };
   }
 
+  // Increment count
   record.count++;
   return {
     allowed: true,
@@ -46,7 +53,9 @@ function checkRateLimit(ip: string): {
   };
 }
 
+// Get client IP address
 function getClientIP(req: VercelRequest): string {
+  
   const forwarded = req.headers["x-forwarded-for"];
   const realIP = req.headers["x-real-ip"];
 
@@ -61,23 +70,37 @@ function getClientIP(req: VercelRequest): string {
   return "unknown";
 }
 
+  function cleanAIResponse(text: string): string {
+   if (!text) return "";
+   return text
+     .replace(/\n{3,}/g, "\n\n")
+     .replace(/^\s*[-*]\s+/gm, "")
+     .trim();
+   }
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Set CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  // Handle preflight request
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
+  // Only allow POST requests
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  // Get client IP for rate limiting
   const clientIP = getClientIP(req);
 
+  // Check rate limit
   const rateLimit = checkRateLimit(clientIP);
 
+  // Set rate limit headers
   res.setHeader("X-RateLimit-Limit", MAX_REQUESTS_PER_WINDOW.toString());
   res.setHeader("X-RateLimit-Remaining", rateLimit.remaining.toString());
   res.setHeader(
@@ -98,10 +121,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
 
+    // Validate message
     if (!message || typeof message !== "string") {
       return res.status(400).json({ error: "Message is required" });
     }
 
+    // Validate message length
     if (message.length > MAX_MESSAGE_LENGTH) {
       return res.status(400).json({
         error: "Message too long",
@@ -109,8 +134,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Sanitize message (prevent injection attacks)
     const sanitizedMessage = message.trim().slice(0, MAX_MESSAGE_LENGTH);
 
+    // Check if API key is configured
     if (!process.env.GEMINI_API_KEY) {
       console.error("GEMINI_API_KEY is not configured");
       return res.status(500).json({
@@ -119,23 +146,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
+    // Event context for the chatbot
     const eventContext = `You are a helpful assistant for the Annual Community Festival event. 
-    This is a spiritual event with donations, schedules, and updates. 
-    Answer questions about the event, donation process, schedules, and general information.
+    This is a spiritual event with donations, schedules, and updates. This event is scheduled
+    for 20 february to 28 february. There will be 5 saints. Prasad will be distributed daily.
+    Answer questions about the event, donation process, schedules,and general information.
     Keep responses concise and helpful.`;
 
+    // Generate response
     const result = await model.generateContent(
       `${eventContext}\n\nUser: ${sanitizedMessage}`
     );
-    const response = await result.response;
-    const text = response.text();
 
-    return res.status(200).json({ response: text });
+    const response = await result.response;
+    
+    const rawtext = response.text();
+    const cleanedText = cleanAIResponse(rawtext);
+    
+   return res.status(200).json({ response: cleanedText });
   } catch (error) {
     console.error("Gemini API error:", error);
 
+    // Log full error details for debugging
     if (error instanceof Error) {
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
